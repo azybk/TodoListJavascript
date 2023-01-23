@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form name="todoForm">
+        <p>
+            <label for="inputTodo" style="font-weight: bold;">Todo: </label>
+            <input type="text" id="inputTodo" name="inputTodo" />
+            <input type="submit" value="Add" />
+        </p>
+    </form>
+
+    <h1>Todolist</h1>
+    <p>
+        <label for="search" style="font-weight: bold;">Filter: </label>
+        <input type="text" id="search" name="search" />
+    </p>
+
+    <table>
+        <tbody id="bodyTodoList">
+        </tbody>
+    </table>
+
+    <script>
+        const todoList = []
+
+        function clearTodoList() {
+            const bodyTodoList = document.getElementById("bodyTodoList")
+
+            while (bodyTodoList.firstChild) {
+                bodyTodoList.removeChild(bodyTodoList.firstChild)
+            }
+        }
+
+        function removeTodoList(index) {
+            todoList.splice(index, 1)
+
+            displayTodoList()
+        }
+
+        function addTodoList(index, todo) {
+            const tr = document.createElement("tr")
+
+            const tdInput = document.createElement("td")
+            const input = document.createElement("input")
+            input.type = "button"
+            input.value = "Done"
+
+            input.onclick = function() {
+                removeTodoList(index)
+            }
+
+            tdInput.appendChild(input)
+            tr.appendChild(tdInput)
+
+            const tdText = document.createElement("td")
+            tdText.textContent = todo
+            tr.appendChild(tdText)
+
+            bodyTodoList.appendChild(tr)
+        }
+
+        function displayTodoList() {
+            clearTodoList()
+
+            for (let i = 0; i < todoList.length; i++) {
+
+                const search = document.getElementById("search").value.toLowerCase()
+
+                if (todoList[i].toLowerCase().includes(search)) {
+                    addTodoList(i, todoList[i])
+                }
+            }
+        }
+
+        document.forms['todoForm'].onsubmit = function(event) {
+            event.preventDefault()
+
+            todoList.push(document.forms['todoForm']['inputTodo'].value)
+            console.info(todoList)
+
+            document.forms['todoForm'].reset()
+
+            displayTodoList()
+        }
+
+        const search = document.getElementById("search")
+
+        search.onkeydown = function() {
+            displayTodoList()
+        }
+
+        search.onkeyup = function() {
+            displayTodoList()
+        }
+    </script>
+</body>
+
+</html>
